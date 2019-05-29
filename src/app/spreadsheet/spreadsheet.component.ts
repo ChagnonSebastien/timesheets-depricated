@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HotTableComponent, HotColumnComponent } from '@handsontable/angular';
 import Handsontable from 'handsontable';
+import { allResolved } from 'q';
 
 @Component({
   selector: 'app-spreadsheet',
@@ -12,23 +13,44 @@ export class SpreadsheetComponent implements OnInit {
   @ViewChild("spreadsheet", {read: HotTableComponent, static: false})
   spreadsheet: HotTableComponent;
 
+  allowedCodes: string[] = ['1', '4', '5', '6'];
+
   settings: Handsontable.GridSettings = {
     minRows: 20,
+    width:  800,
     minCols: 10,
     autoRowSize: false,
-    className: "htCenter htMiddle",
     renderer: (instance, td, row, col, prop, value, cellProperties) => {
-      if ((row > 0 && row < 16 && col < 2) || (false)) {
+      if ((row > 15 && col > 4) || (row > 0 && row < 16 && col < 2) || (row === 1 && col < 5) || (row === 0 && col === 5)) {
         td.style.background = '#e8f3ff';
       }
-      td.innerText = value;
+      if ((row === 19 && col === 5)) {
+        td.style.background = '#6da5ff';
+        td.style.fontWeight = "bold";
+      }
+      td.style.textAlign = "center"
+      if ((row > 15 && col === 0)) {
+        td.style.borderLeft = "0";
+        td.style.borderBottom = "0";
+        td.style.textAlign = "right"
+      }
+      if ((row > 1 && row < 16 && col === 4)) {
+        td.style.textAlign = "left"
+      }
+      if (!(row === 1 && col > 4)) {
+        td.innerText = value;
+      }
+      td.style.verticalAlign = "middle"
     },
     cells: (i, j) => {
       let meta: Handsontable.CellMeta = {};
-      if (i < 2 || j < 2 || i > 15) {
+      if ((i < 2 || j < 2 || i > 15) && !(i === 1 && j > 4)) {
         meta.readOnly = true;
       }
-      
+      if (i === 1 && j > 4) {
+        meta.type = 'dropdown';
+        meta.source = [''].concat(this.allowedCodes);
+      }
       return meta;
     },
     colWidths: i => {
@@ -42,7 +64,7 @@ export class SpreadsheetComponent implements OnInit {
         case 4:
           return 300
         default:
-          return 32
+          return 45
 
       }
     },
@@ -53,12 +75,13 @@ export class SpreadsheetComponent implements OnInit {
       {col: 0, colspan: 5, row: 17, rowspan: 1},
       {col: 0, colspan: 5, row: 18, rowspan: 1},
       {col: 0, colspan: 5, row: 19, rowspan: 1},
+      {col: 5, colspan: 5, row: 19, rowspan: 1},
     ],
     customBorders: [
       {
-       range: {from: {row: 1, col: 0}, to:{row: 3, col: 4}},
-       top: {color: "red", width: -1},
-       bottom: {color: "red"},
+       range: {from: {row: 2, col: 5}, to:{row: 15, col: 9}},
+       top: {},
+       bottom: {},
       },
     ],
   }
@@ -80,6 +103,10 @@ export class SpreadsheetComponent implements OnInit {
     ['', 'Jeu', '00:00', '00:00'],
     ['', 'Ven', '00:00', '00:00'],
     ['', 'Sam', '00:00', '00:00'],
+    ['TOTAL HEURES PAR TÂCHE'],
+    ['TAUX PAR TÂCHE'],
+    ['TOTAL PAR TÂCHE'],
+    ['TOTAL PAIE'],
   ];
 
   constructor() {

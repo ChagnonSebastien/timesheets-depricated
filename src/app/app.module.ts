@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { SpreadsheetComponent } from './spreadsheet/spreadsheet.component';
 import { HotTableModule } from '@handsontable/angular';
+import { PayDataService } from './spreadsheet/pay-data.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,9 @@ import { HotTableModule } from '@handsontable/angular';
     BrowserModule,
     HotTableModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    PayDataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

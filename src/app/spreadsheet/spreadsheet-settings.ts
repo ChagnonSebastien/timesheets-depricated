@@ -31,9 +31,6 @@ export function getSettings(getAllowedCodes: GetAllowedCodesFunction): Handsonta
     return  {
         minRows: 20,
         minCols: 10,
-        width: 800,
-        height: 465,
-        autoRowSize: false,
         renderer: (instance, td, row, col, prop, value, cellProperties) => {
           if ((row > 15 && col > 4) || (row > 0 && row < 16 && col < 2) || (row === 1 && col < 5) || (row === 0 && col === 5)) {
             td.style.background = '#e8f3ff';
@@ -41,6 +38,10 @@ export function getSettings(getAllowedCodes: GetAllowedCodesFunction): Handsonta
           if ((row === 19 && col === 5)) {
             td.style.background = '#6da5ff';
             td.style.fontWeight = "bold";
+          }
+          if ((row === 1 && col > 4)) {
+            if (![null, ''].concat(getAllowedCodes()).includes(value))
+              td.style.background = '#ffb7b7';
           }
           td.style.textAlign = "center"
           if ((row > 15 && col === 0)) {
@@ -51,19 +52,14 @@ export function getSettings(getAllowedCodes: GetAllowedCodesFunction): Handsonta
           if ((row > 1 && row < 16 && col === 4)) {
             td.style.textAlign = "left"
           }
-          if (!(row === 1 && col > 4)) {
-            td.innerText = value;
-          }
+
+          td.innerText = value;
           td.style.verticalAlign = "middle"
         },
         cells: (i, j) => {
           let meta: Handsontable.CellMeta = {};
           if ((i < 2 || j < 2 || i > 15) && !(i === 1 && j > 4)) {
             meta.readOnly = true;
-          }
-          if (i === 1 && j > 4) {
-            meta.type = 'dropdown';
-            meta.source = [''].concat(getAllowedCodes());
           }
           return meta;
         },

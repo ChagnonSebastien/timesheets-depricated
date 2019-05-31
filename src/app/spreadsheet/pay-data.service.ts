@@ -28,6 +28,7 @@ export class PayDataService {
       this.data[i+2][0] = ("00" + date.getDate()).slice(-2) + "/" + ("00" + (date.getMonth() + 1)).slice(-2);
       date.setDate(date.getDate() + 1);
     }
+    
     return this.data;
   }
 

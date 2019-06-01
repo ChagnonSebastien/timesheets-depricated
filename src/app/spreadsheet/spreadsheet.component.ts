@@ -1,18 +1,20 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HotTableComponent } from '@handsontable/angular';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import Handsontable from 'handsontable';
 import { PayDataService } from './pay-data.service';
 import { getSettings } from './spreadsheet-settings';
+import { HotTableRegisterer, HotTableComponent } from '@handsontable/angular';
 
 @Component({
   selector: 'app-spreadsheet',
   templateUrl: './spreadsheet.component.html',
   styleUrls: ['./spreadsheet.component.css']
 })
-export class SpreadsheetComponent implements OnInit {
+export class SpreadsheetComponent implements OnInit, AfterViewInit {
   
-  @ViewChild('sprsh', {read: ElementRef, static: false})
-  public sprsh: ElementRef;
+  @ViewChild('spreadsheet', {read: HotTableComponent, static: true})
+  public spreadsheet: HotTableComponent;
+  
+  public erer: ElementRef;
 
   private data: any[][];
   
@@ -20,18 +22,24 @@ export class SpreadsheetComponent implements OnInit {
     return getSettings(() => ['1', '4', '5', '6']);
   }
 
-  constructor(private payDataService: PayDataService) {
+  constructor(private payDataService: PayDataService, private hotRegisterer: HotTableRegisterer) {
     this.data = this.payDataService.changeDate(0);
   }
 
   ngOnInit() {
   }
+
+  ngAfterViewInit() {
+  }
   
   onAfterChange(changes: any, source: string) {
-    console.log(this.sprsh)
-    if (source === "populateFromArray") {
+    if (source === "populateFromArray" || source === "loadData")
+      return false;
 
-    }
+    console.log(this.spreadsheet);
+    console.log(changes, source);
   }
+
+  onAfterChangeBound: Function = this.onAfterChange.bind(this);
 
 }

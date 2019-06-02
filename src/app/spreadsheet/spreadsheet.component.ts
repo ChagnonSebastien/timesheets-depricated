@@ -22,13 +22,15 @@ export class SpreadsheetComponent implements OnInit {
   }
   
   onAfterChange: Function = ((changes: Handsontable.CellChange[], source: Handsontable.ChangeSource) => {
-    console.log(source);
     if ((source === 'edit' || source === 'CopyPaste.paste')) {
       let changedAmounts = false;
 
       changes.forEach((value: [number, string | number, any, any]) => {
-        if (value[0] > 1 && value[0] < 16 && value[1] > 4) {
-          this.data[value[0]][value[1]] = Number(String(value[3]).replace(",", "."));
+        if (value[0] > 0 && value[0] < 16 && value[1] > 4) {
+          if (String(value[3]) === '')
+            this.data[value[0]][value[1]] = null;
+          else
+            this.data[value[0]][value[1]] = Number(String(value[3]).replace(",", "."));
           changedAmounts = true;
         }
       });
@@ -109,14 +111,15 @@ export class SpreadsheetComponent implements OnInit {
         if (typeof this.data[j + 2][i + 5] === 'number')
           total += this.data[j + 2][i + 5];
       }
-      this.data[16][i + 5] = `${total}`.slice(0, Math.ceil(Math.log10(total)) + 3);
-      this.data[17][i + 5] = `$${total}`.slice(0, Math.ceil(Math.log10(total)) + 4);
+
+      this.data[16][i + 5] = `${total}`.slice(0, Math.ceil(Math.log10(total)) + 3 );
+      this.data[17][i + 5] = `$${total.toFixed(2)}`;
       let sum = total * total;
-      this.data[18][i + 5] = `$${sum}`.slice(0, Math.ceil(Math.log10(sum)) + 4);
+      this.data[18][i + 5] = `$${sum.toFixed(2)}`;
 
       salary += sum;
     }
 
-    this.data[19][5] = `$${salary}`.slice(0, Math.ceil(Math.log10(salary)) + 4);
+    this.data[19][5] = `$${salary.toFixed(2)}`;
   }
 }

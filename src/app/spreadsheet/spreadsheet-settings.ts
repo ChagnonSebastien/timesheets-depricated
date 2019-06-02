@@ -3,20 +3,20 @@ import Handsontable from "handsontable";
 export const PAY_TEMPLATE: any[][] = [
     ['', '', '', '', '', 'CODES'],
     ['DATE', 'JOUR', 'ARRIVÉE', 'DÉPART', 'DESCRIPTION'],
-    ['', 'Dim', '00:00', '00:00'],
-    ['', 'Lun', '00:00', '00:00'],
-    ['', 'Mar', '00:00', '00:00'],
-    ['', 'Mer', '00:00', '00:00'],
-    ['', 'Jeu', '00:00', '00:00'],
-    ['', 'Ven', '00:00', '00:00'],
-    ['', 'Sam', '00:00', '00:00'],
-    ['', 'Dim', '00:00', '00:00'],
-    ['', 'Lun', '00:00', '00:00'],
-    ['', 'Mar', '00:00', '00:00'],
-    ['', 'Mer', '00:00', '00:00'],
-    ['', 'Jeu', '00:00', '00:00'],
-    ['', 'Ven', '00:00', '00:00'],
-    ['', 'Sam', '00:00', '00:00'],
+    ['', 'Dim'],
+    ['', 'Lun'],
+    ['', 'Mar'],
+    ['', 'Mer'],
+    ['', 'Jeu'],
+    ['', 'Ven'],
+    ['', 'Sam'],
+    ['', 'Dim'],
+    ['', 'Lun'],
+    ['', 'Mar'],
+    ['', 'Mer'],
+    ['', 'Jeu'],
+    ['', 'Ven'],
+    ['', 'Sam'],
     ['TOTAL HEURES PAR TÂCHE'],
     ['TAUX PAR TÂCHE'],
     ['TOTAL PAR TÂCHE'],
@@ -24,7 +24,7 @@ export const PAY_TEMPLATE: any[][] = [
   ];
 
 export interface GetAllowedCodesFunction {
-    () : string[];
+    () : number[];
 }
 
 export function getSettings(getAllowedCodes: GetAllowedCodesFunction): Handsontable.GridSettings {
@@ -39,8 +39,11 @@ export function getSettings(getAllowedCodes: GetAllowedCodesFunction): Handsonta
             td.style.background = '#6da5ff';
             td.style.fontWeight = "bold";
           }
+          if (((row === 17 || row === 18) && col > 4)) {
+            td.style.fontSize = "0.8em"
+          }
           if ((row === 1 && col > 4)) {
-            if (![null, ''].concat(getAllowedCodes()).includes(value))
+            if (![null].concat(getAllowedCodes()).includes(value))
               td.style.background = '#ffb7b7';
           }
           td.style.textAlign = "center"
